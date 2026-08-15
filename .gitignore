@@ -6,3 +6,7 @@ node_modules/
 .DS_Store
 coverage/
 tmp/
+
+# Local assistant notes, never published with the action.
+.claude/
+CLAUDE.md
