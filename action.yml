@@ -1,0 +1,94 @@
+name: 'Jira PR Description Sync'
+description: 'Turn a Jira issue into a readable pull request description. Converts Jira rich text to GitHub-Flavored Markdown.'
+author: 'Gonzalo'
+
+branding:
+  icon: 'file-text'
+  color: 'blue'
+
+inputs:
+  github-token:
+    description: 'Token used to read and update the pull request. Needs `pull-requests: write`.'
+    required: false
+    default: ${{ github.token }}
+  jira-base-url:
+    description: 'Jira base URL, for example https://your-org.atlassian.net'
+    required: true
+  jira-email:
+    description: 'Email of the Jira account that owns the API token.'
+    required: true
+  jira-token:
+    description: 'Jira API token. Store it as an encrypted secret.'
+    required: true
+  issue:
+    description: 'Issue key to sync (for example ACME-42). When empty it is detected from the branch name, then the PR title, then the PR body.'
+    required: false
+    default: ''
+  issue-pattern:
+    description: 'Regular expression used to detect the issue key. The first capture group is the key.'
+    required: false
+    default: '([A-Za-z][A-Za-z0-9]+-\d+)'
+  pr-number:
+    description: 'Pull request number. Detected automatically on pull_request events, and looked up by branch on other events.'
+    required: false
+    default: ''
+  mode:
+    description: 'How to write the body. `replace` rewrites it, `block` only updates the content between the sync markers and keeps everything the author wrote.'
+    required: false
+    default: 'replace'
+  attachments:
+    description: 'Attachment handling: `details` (collapsible list), `inline` (links only, in place) or `off`.'
+    required: false
+    default: 'details'
+  criteria-section:
+    description: 'Lift acceptance criteria or testing steps out of the description into their own section.'
+    required: false
+    default: 'true'
+  criteria-headings:
+    description: 'Comma separated headings that mark the acceptance criteria section.'
+    required: false
+    default: 'acceptance criteria,testing steps,test steps,steps to test,qa steps,how to test'
+  collapse-over:
+    description: 'Wrap the description in a <details> block when it is longer than this many characters. Use 0 to never collapse.'
+    required: false
+    default: '1500'
+  metadata-table:
+    description: 'Add a table with issue type, status, priority, assignee, parent and labels.'
+    required: false
+    default: 'false'
+  checklist:
+    description: 'Newline separated checklist items appended to the body. Empty means no checklist.'
+    required: false
+    default: ''
+  template:
+    description: 'Body layout. Placeholders: {{key}} {{summary}} {{url}} {{description}} {{criteria}} {{attachments}} {{metadata}} {{checklist}}'
+    required: false
+    default: ''
+  fail-on-missing:
+    description: 'Fail the step when the issue cannot be found or read. When false the step logs a warning and succeeds.'
+    required: false
+    default: 'false'
+  dry-run:
+    description: 'Render the body and write it to the job summary without touching the pull request.'
+    required: false
+    default: 'false'
+
+outputs:
+  issue-key:
+    description: 'The issue key that was used.'
+  issue-url:
+    description: 'Browse URL of the issue.'
+  summary:
+    description: 'Issue summary.'
+  status:
+    description: 'Issue status name.'
+  assignee:
+    description: 'Issue assignee display name.'
+  markdown:
+    description: 'The generated Markdown.'
+  updated:
+    description: 'true when the pull request body was changed.'
+
+runs:
+  using: 'node24'
+  main: 'dist/index.js'

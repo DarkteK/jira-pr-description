@@ -1,0 +1,37 @@
+<h2>Background</h2>
+
+<p>The importer drops rows whose&nbsp;<code>status</code>&nbsp;column is empty.</p>
+
+<div class="panel conf-macro output-block" data-hasbody="true" data-macro-name="warning">
+<div class="panelContent">
+<p>Do not run this against production before the backup finishes.</p>
+</div>
+</div>
+
+<table>
+<thead>
+<tr><th>Environment</th><th>Rows</th><th>Owner</th></tr>
+</thead>
+<tbody>
+<tr><td>staging</td><td>1,204</td><td><a class="user-hover" href="https://your-org.atlassian.net/secure/ViewProfile.jspa?accountId=1">Dana Fields</a></td></tr>
+<tr><td>sandbox</td><td>87</td><td>unassigned</td></tr>
+</tbody>
+</table>
+
+<p>Current state: <span class="status-lozenge status-yellow">IN PROGRESS</span></p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java" data-language="javascript">const rows = source.filter((row) =&gt; row.status);
+export default rows;</pre>
+</div></div>
+
+<ul>
+	<li>Validate the CSV header
+		<ul>
+			<li>Reject unknown columns</li>
+		</ul>
+	</li>
+	<li>Log every skipped row</li>
+</ul>
+
+<p>Nice work <img class="emoticon" src="https://your-org.atlassian.net/images/icons/emoticons/smile.png" alt=":)" height="16" width="16" /></p>
